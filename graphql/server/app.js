@@ -2,6 +2,7 @@ const express = require("express")
 // const graphqlHTTP = require('express-graphql')
 const graphqlHTTP = require('express-graphql').graphqlHTTP;
 const mongoose = require('mongoose')
+const schema = require('./schema/schema')
 require('dotenv').config()
 
 const app = express()
@@ -20,7 +21,8 @@ mongoose.connection.once('open', () => {
 
 // Rooting
 app.use('/graphql', graphqlHTTP({
-
+    schema,
+    graphiql: true
 }))
 
 // Listen Port
