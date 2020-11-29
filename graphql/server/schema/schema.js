@@ -110,7 +110,7 @@ const Mutation = new GraphQLObjectType({
                 id: {type: GraphQLNonNull(GraphQLID)},
                 name: {type: GraphQLString},
                 genre: {type: GraphQLString},
-                directorId: {type: GraphQLInt}
+                directorId: {type: GraphQLID}
             },
             resolve(parent, args) {
                 let updateMovie = {}
