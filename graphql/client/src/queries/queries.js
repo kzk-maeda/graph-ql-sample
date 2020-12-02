@@ -11,3 +11,19 @@ export const MOVIE_LIST = gql`
             }
         }
     }`
+
+export const DIRECTOR_LIST = gql`
+    query {
+        directors{
+            id
+            name
+        }
+    }`
+
+export const ADD_MOVIE = gql`
+    mutation($name: String!, $genre: String!, $directorId: ID!) {
+        addMovie(name: $name genre: $genre directorId: $directorId) {
+        name
+        genre
+        }
+    }`
