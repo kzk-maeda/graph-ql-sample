@@ -140,7 +140,7 @@ const Mutation = new GraphQLObjectType({
                 id: {type: GraphQLNonNull(GraphQLID)},
             },
             resolve(parent, args) {
-                return Movie.findOneAndRemove(args.id)
+                return Movie.findByIdAndRemove(args.id)
             }
         },
         deleteDirector: {
@@ -149,7 +149,7 @@ const Mutation = new GraphQLObjectType({
                 id: {type: GraphQLNonNull(GraphQLID)},
             },
             resolve(parent, args) {
-                return Director.findOneAndRemove(args.id)
+                return Director.findByIdAndRemove(args.id)
             }
         }
     }
