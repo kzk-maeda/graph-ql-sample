@@ -1,19 +1,30 @@
 import React from 'react';
 import { Card, CardHeader, CardBody, Form, FormGroup, Button } from 'reactstrap';
 import { useQuery, useMutation } from '@apollo/client';
-import { DIRECTOR_LIST, ADD_MOVIE } from '../queries/queries';
+import { DIRECTOR_LIST, ADD_MOVIE, MOVIE_LIST, ADD_DIRECTOR } from '../queries/queries';
 import { useForm } from "react-hook-form";
 
 function SideNav() {
     const {data} = useQuery(DIRECTOR_LIST)
-    const { register, handleSubmit, watch, errors } = useForm();
-    const [addMovie] = useMutation(ADD_MOVIE)
-    const onSubmit = ({movieName, movieGenre, directorId}) => {
+    const { register, handleSubmit} = useForm();
+    const { register: registerDirector, handleSubmit: handleSubmitDirector} = useForm();
+    const [addMovie] = useMutation(ADD_MOVIE, { refetchQueries: [{ query: MOVIE_LIST }], awaitRefetchQueries: true })
+    const [addDirector] = useMutation(ADD_DIRECTOR, { refetchQueries: [{ query: DIRECTOR_LIST }], awaitRefetchQueries: true })
+    const onSubmitMovie = ({movieName, movieGenre, directorId}, e) => {
         addMovie({ variables: {
             name: movieName,
             genre: movieGenre,
             directorId: directorId
         } })
+        e.target.reset()
+    }
+    const onSubmitDirector = ({directorName, directorAge}, e) => {
+        var intAge = parseInt(directorAge)
+        addDirector({ variables: {
+            name: directorName,
+            age: intAge
+        }})
+        e.target.reset()
     }
 
     return(
@@ -23,12 +34,12 @@ function SideNav() {
                     映画監督
                 </CardHeader>
                 <CardBody>
-                    <Form>
+                    <Form onSubmit={handleSubmitDirector(onSubmitDirector)}>
                         <FormGroup>
-                            <input className="form-control" type="text" name="directorName" placeholder="監督名"/>
+                            <input className="form-control" type="text" name="directorName" placeholder="監督名" ref={registerDirector}/>
                         </FormGroup>
                         <FormGroup>
-                            <input className="form-control" type="number" name="directorAge" placeholder="年齢"/>
+                            <input className="form-control" type="number" name="directorAge" placeholder="年齢"  ref={registerDirector}/>
                         </FormGroup>
                         <Button color="primary" type="submit">追加</Button>
                     </Form>
@@ -39,7 +50,7 @@ function SideNav() {
                     映画作品
                 </CardHeader>
                 <CardBody>
-                    <Form onSubmit={handleSubmit(onSubmit)}>
+                    <Form onSubmit={handleSubmit(onSubmitMovie)}>
                         <FormGroup>
                             <input className="form-control" type="text" name="movieName" placeholder="タイトル" ref={register}/>
                         </FormGroup>
